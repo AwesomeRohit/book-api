@@ -1,0 +1,29 @@
+{
+  "name": "book-management-system",
+  "version": "1.0.0",
+  "description": "a RESTful API that allows users to manage a collection of books. The API supports CRUD (Create, Read, Update, Delete) operations and includes authentication, pagination, and search functionality.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "nodemon ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "book-management-api"
+  },
+  "author": "Rohit Suthar",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-redis": "^8.0.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.4",
+    "nodemon": "^3.1.7"
+  }
+}
