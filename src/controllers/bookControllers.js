@@ -9,7 +9,11 @@ export const getAllbooks = async (req, res) => {
             return res.status(200).json(JSON.parse(getBook));
          }
      
-        const books = await Book.find({});
+        const books = await Book.find();
+
+        if(!books) {
+          return res.status(500).json({message : "No Books Found!"})
+        }
          
         await redis.set("book", JSON.stringify(books), "EX", 3600);
         
@@ -61,6 +65,7 @@ export const deleteBook = async (req,res)=>{
             if(!title) return res.status(400).json({message : "Title field is required to delete a book!"})
               
                 const remove = await Book.findOneAndDelete({title});
+                await redis.del("book");
 
                 if(!remove) {
                     return res.status(404).json({message : `Book with title ${title} not found!`})
