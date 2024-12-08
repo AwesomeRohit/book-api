@@ -9,9 +9,9 @@ export const getAllbooks = async (req, res) => {
             return res.status(200).json(JSON.parse(getBook));
          }
      
-        const books = await Book.find({}).populate();
+        const books = await Book.find({});
          
-        await redis.set("book", JSON.stringify({books}), "EX", 3600);
+        await redis.set("book", JSON.stringify(books), "EX", 3600);
         
         return res.status(200).json(books);
     } catch (error) {
