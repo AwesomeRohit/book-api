@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
-import connectDB from "./db/connect-db.js";
-import authRoutes from "./Routes/auth.route.js"
+import connectDB from "./src/db/connect-db.js";
+import authRoutes from "./src/Routes/auth.route.js"
 import cookieParser from "cookie-parser";
-import bookRoutes from  "./Routes/bookRoutes.js"
+import bookRoutes from  "./src/Routes/bookRoutes.js"
 dotenv.config();
 
 const app = express();
