@@ -10,7 +10,7 @@ export const jwtAuthandSession = async (req, res, next) => {
     try {
         //verify by JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET,);
-        console.log("Decoded JWT Payload:", decoded);
+        console.log("Decoded JWT Payload:", decoded.email);
 
         //checking session in redis
 
@@ -22,7 +22,9 @@ export const jwtAuthandSession = async (req, res, next) => {
 
         if (!sessionData) return res.status(501).json({ message: "session not found!" })
 
-        req.user = { UserId: decoded.UserId, ...JSON.parse(sessionData) }
+        req.user = { UserId: decoded.UserId, email : decoded.email, ...JSON.parse(sessionData) }
+        console.log(req.user);
+        
 
         next();
     } catch (error) {
