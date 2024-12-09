@@ -14,7 +14,7 @@ export const getAllbooks = async (req, res) => {
   if(author) filter.author = {$regex : author, $options : "i"};
   if(genere) filter.genere = genere;
 
-  const cacheKey = `book:genere=${genere || 'all'}:author=${author || 'all'}:title=${title || 'all'}:page=${page}:limit=${limit}`;
+  const cacheKey = `book:genere=${genere || 'all'}:author=${author || 'all'}:title=${title || 'all'}:page=${page}:limit=${limit}`.replace(/\s+/g, '');
 
   try {
     const getBook = await redis.get(cacheKey);

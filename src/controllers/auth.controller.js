@@ -39,14 +39,15 @@ export const signup = async (req, res) => {
         const hash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            username,
-            email,
+           username : username,
+           email : email,
             password: hash,
 
         })
         if (newUser) {
 
             await generateCookieAndSetToken(newUser._id, newUser.email, res);
+            console.log(newUser._id, newUser.email);
 
             const sessionKey = `session:${newUser._id}`
             await redis.set(sessionKey, JSON.stringify({ username: newUser.username }), "EX", 60 * 60 * 60);
@@ -58,17 +59,18 @@ export const signup = async (req, res) => {
                 username: newUser.username,
                 email: newUser.email,
             })
-            await sendEmail({
-                to: req.user.email,
-                subject: "Account Created!",
-                text: `Hi ${req.user.username} your account has been created succesfully!`,
-                html: `<p> Hi ${req.user.username}</p> <p> your account has been created succesfully </p> `
-            })
-        } else {
-
-            res.status(400).json({error: "Invalid User Data!"})
-        }
-
+            try {
+                await sendEmail({
+                    to: newUser.email,
+                    subject: "Account Created!",
+                    text: `Hi ${newUser.username} your account has been created succesfully!`,
+                    html: `<p> Hi ${newUser.username}</p> <p> your account has been created succesfully </p> `
+                })
+            } catch (error) {
+                console.error("Error sending email:", error.message);
+            }
+            
+        } 
 
     } catch (error) {
         console.error("error sending email", error.message)
@@ -97,13 +99,19 @@ export const login = async (req, res, next) => {
             username: user.username,
             email: user.email,
         })
-
-        await sendEmail({
-            to: req.user.email,
-            subject: "you just logged in!",
-            text: `Hi ${req.user.username} your just logged in`,
-            html: `<p> Hi ${req.user.username}</p> <p> your just logged in  </p> `
-        })
+        
+           try {
+            await sendEmail({
+                to: user.email,
+                subject: "you just logged in!",
+                text: `Hi ${user.username} your just logged in`,
+                html: `<p> Hi ${user.username}</p> <p> your just logged in  </p> `
+            })
+            
+           } catch (error) {
+            console.error("Error sending email:", error.message);
+           }
+  
         console.log("Login Succesfully!")
 
     } catch (error) {

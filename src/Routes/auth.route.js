@@ -5,7 +5,7 @@ import { signUpValidation } from "../middlewares/signupValidation.js";
 import { jwtAuthandSession } from "../middlewares/jwtAndSession.js";
 
 
-router.post('/login', jwtAuthandSession, login);
+router.post('/login', login);
 router.post('/signup', signUpValidation, signup);
 router.post('/logout', logout);
 
