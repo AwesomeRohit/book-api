@@ -6,21 +6,23 @@ export const getAllbooks = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
+  
+  const {title, genere, author} = req.query;
+  
+  const filter = {};
+  if(title) filter.title = {$regex : title, $options : "i"};
+  if(author) filter.author = {$regex : author, $options : "i"};
+  if(genere) filter.genere = genere;
 
-  const cacheKey = `book:page= ${page}:limit=${limit}`;
+  const cacheKey = `book:genere=${genere || 'all'}:author=${author || 'all'}:title=${title || 'all'}:page=${page}:limit=${limit}`;
 
   try {
-
-
-
     const getBook = await redis.get(cacheKey);
 
     if (getBook) {
       return res.status(200).json(JSON.parse(getBook));
     }
-
-    const books = await Book.find().skip(skip).limit(limit).populate();
-
+    const books = await Book.find(filter).skip(skip).limit(limit).populate();
     if (!books) {
       return res.status(500).json({
         message: "No Books Found!"
@@ -40,12 +42,7 @@ export const getAllbooks = async (req, res) => {
 export const addBook = async (req, res) => {
 
   try {
-    const {
-      title,
-      author,
-      genere,
-      publicationYear
-    } = req.body;
+    const {title,author,genere, publicationYear} = req.body;
 
     if (!title || !author || !genere || !publicationYear) {
       return res.status(400).json({
@@ -63,9 +60,7 @@ export const addBook = async (req, res) => {
       await newBook.save();
       try {
         const bookKey = `book:${title}`
-        await redis.set(bookKey, JSON.stringify({
-          newBook
-        }), "EX", 3600);
+        await redis.set(bookKey, JSON.stringify({newBook}), "EX", 3600);
         console.log(`Your Book Key is ${bookKey}`)
       } catch (error) {
         console.error("Error saving to cache", error.message);

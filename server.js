@@ -14,6 +14,9 @@ app.use(express.json());
 app.use(helmet());
 app.use(cookieParser())
 
+app.get('/', (req,res)=>{
+    res.redirect('/api/books')
+})
 const PORT = process.env.PORT || 5000;
 
 app.use('/api/auth', authRoutes);

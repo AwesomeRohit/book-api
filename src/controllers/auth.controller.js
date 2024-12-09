@@ -13,24 +13,12 @@ export const signup = async (req, res) => {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
-        const {
-            username,
-            email,
-            password,
-            confirmPassword
-        } = req.body;
-
-
+        const {username,email,password,confirmPassword} = req.body;
 
         if (password !== confirmPassword) {
-            return res.status(400).json({
-                message: "Password Doesnt Match!"
-            })
+            return res.status(400).json({message: "Password Doesnt Match!"})
         }
-        const emailCheck = await User.findOne({
-            email
-        });
+        const emailCheck = await User.findOne({email});
 
         if (emailCheck) {
             return res.status(401).json({
@@ -78,18 +66,14 @@ export const signup = async (req, res) => {
             })
         } else {
 
-            res.status(400).json({
-                error: "Invalid User Data!"
-            })
+            res.status(400).json({error: "Invalid User Data!"})
         }
 
 
     } catch (error) {
         console.error("error sending email", error.message)
         console.log("Error in signUp controller", error.message);
-        res.status(500).json({
-            error: error.message
-        });
+        res.status(500).json({error: error.message});
 
     }
 }

@@ -4,7 +4,7 @@ import { getAllbooks,addBook,deleteBook } from "../controllers/bookControllers.j
 
 const router = expres.Router();
 
-router.get('/',jwtAuthandSession, getAllbooks);
+router.get('/', getAllbooks);
 
 router.post('/addBook', jwtAuthandSession, addBook);
 

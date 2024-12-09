@@ -10,6 +10,7 @@ export const jwtAuthandSession = async (req, res, next) => {
     try {
         //verify by JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET,);
+        
         console.log("Decoded JWT Payload:", decoded.email);
 
         //checking session in redis
