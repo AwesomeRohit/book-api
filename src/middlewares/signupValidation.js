@@ -6,3 +6,4 @@ export const signUpValidation = [
     body("password").isLength({min : 8}).withMessage("Password Must be 8 Characters Long")
 ]
 
+
